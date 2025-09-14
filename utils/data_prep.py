@@ -68,7 +68,7 @@ def get_data_generators(csv_dir, img_dir):
         train_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(128, 128),
+        target_size=(256, 256),
         class_mode='raw',
         batch_size=32,
         shuffle=True
@@ -78,7 +78,7 @@ def get_data_generators(csv_dir, img_dir):
         val_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(128, 128),
+        target_size=(256, 256),
         class_mode='raw',
         batch_size=32,
         shuffle=False
@@ -88,7 +88,7 @@ def get_data_generators(csv_dir, img_dir):
         dataframe=df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(128, 128),
+        target_size=(256, 256),
         class_mode='raw',
         batch_size=32,
         shuffle=False
@@ -104,4 +104,4 @@ def get_data_generators(csv_dir, img_dir):
 # print(y_batch.shape)  
 # print(y_batch[1])
 
-# get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
