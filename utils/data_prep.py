@@ -53,11 +53,10 @@ def get_data_generators(csv_dir, img_dir):
 
     train_datagen = ImageDataGenerator(
         rescale=1./255,
-        zoom_range=0.2,          # random zoom up to +-20%
+        zoom_range=0,          # random zoom up to +-20%
         horizontal_flip=True,    # randomly flip horizontally
-        rotation_range=15,       # small rotations
-        width_shift_range=0.1,   # random horizontal shifts
-        height_shift_range=0.1,  # random vertical shifts
+        vertical_flip=True,
+        rotation_range=30,       # small rotations
         brightness_range=[0.7, 1.3],
         fill_mode='nearest'      # fill gaps after shifts/rotations
     )
@@ -69,7 +68,7 @@ def get_data_generators(csv_dir, img_dir):
         train_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(224, 224),
+        target_size=(128, 128),
         class_mode='raw',
         batch_size=32,
         shuffle=True
@@ -79,7 +78,7 @@ def get_data_generators(csv_dir, img_dir):
         val_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(224, 224),
+        target_size=(128, 128),
         class_mode='raw',
         batch_size=32,
         shuffle=False
@@ -89,7 +88,7 @@ def get_data_generators(csv_dir, img_dir):
         dataframe=df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(224, 224),
+        target_size=(128, 128),
         class_mode='raw',
         batch_size=32,
         shuffle=False
