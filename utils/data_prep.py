@@ -97,12 +97,12 @@ def get_data_generators(csv_dir, img_dir):
 
     return train_gen, val_gen, full_gen, df
 
-train_gen, val_gen, full_gen,df = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+# train_gen, val_gen, full_gen,df = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
 
-x_batch, y_batch = next(iter(train_gen))
+# x_batch, y_batch = next(iter(train_gen))
 
-print(x_batch.shape)  
-print(y_batch.shape)  
-print(y_batch[1])
+# print(x_batch.shape)  
+# print(y_batch.shape)  
+# print(y_batch[1])
 
 # get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
