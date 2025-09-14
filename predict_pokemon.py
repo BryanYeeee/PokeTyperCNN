@@ -3,26 +3,26 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from utils.data_prep import get_data_generators
 # Load model
-# model = load_model("models\classifier1.h5")
+model = load_model("models\poke_type_(64x64,0.79auc).h5")
 
 # Get data generators again (so you have val_gen to test on)
 train_gen, val_gen, full_gen, df = get_data_generators(
     "./data/pokemon.csv",
-    "./data/pokemon-img/pokemon/pokemon/", img_size=(32,32)
+    "./data/pokemon-img/pokemon/pokemon/", img_size=(64,64)
 )
 
-# loss, acc, auc = model.evaluate(full_gen, verbose=1)
+# print( model.evaluate(full_gen, verbose=1))
 
 # print(f"Validation Loss: {loss:.4f}")
 # print(f"Validation Accuracy: {acc:.4f}")
 # print(f"Validation AUC: {auc:.4f}")
-
-def exact_match_accuracy(y_true, y_pred):
-    y_pred_binary = tf.cast(y_pred > 0.5, tf.int32)
-    y_true_binary = tf.cast(y_true, tf.int32)
-    matches = tf.reduce_all(tf.equal(y_true_binary, y_pred_binary), axis=1)
-    return tf.reduce_mean(tf.cast(matches, tf.float32))
-model2 = load_model("models/poke_type_70acc-99auc_v1.h5",custom_objects={'exact_match_accuracy': exact_match_accuracy})
+# x = 1/0
+# def exact_match_accuracy(y_true, y_pred):
+#     y_pred_binary = tf.cast(y_pred > 0.5, tf.int32)
+#     y_true_binary = tf.cast(y_true, tf.int32)
+#     matches = tf.reduce_all(tf.equal(y_true_binary, y_pred_binary), axis=1)
+#     return tf.reduce_mean(tf.cast(matches, tf.float32))
+# model2 = load_model("models/poke_type_70acc-99auc_v1.h5",custom_objects={'exact_match_accuracy': exact_match_accuracy})
 # loss, auc, bin,a,p,d = model2.evaluate(full_gen, verbose=1)
 # print(f"Validation Loss: {loss:.4f}")
 # print(f"Validation auc: {auc:.4f}")
@@ -35,7 +35,7 @@ total = 0
 cor = 0
 fullcor=0
 for i, (x, y) in enumerate(full_gen): 
-    batch_indices = full_gen.index_array[32*i:32*i+32]
+    batch_indices = full_gen.index_array[16*i:16*i+16]
     probs = model.predict(x, verbose=0)
     # print(df.iloc[idx]['name'])
     # break

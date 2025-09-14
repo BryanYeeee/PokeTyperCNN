@@ -3,6 +3,8 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
 from sklearn.model_selection import train_test_split
 
+
+
 def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
     df = pd.read_csv(csv_dir)
     df = df.drop(df.index[721:801])
@@ -49,15 +51,37 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
     # print(missing_files.tolist())
     # print(df.columns)
 
+    # Prepare labels
+    # labels = df[[c for c in df.columns if c.startswith("label_")]].values
+
+    # # Create stratified splitter
+    # msss = MultilabelStratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+
+    # for train_idx, val_idx in msss.split(df, labels):
+    #     train_df = df.iloc[train_idx]
+    #     val_df = df.iloc[val_idx]
     train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
+
+    # Count type distribution in train/val
+    # train_counts = train_df[[c for c in train_df.columns if c.startswith("label_")]].sum()
+    # val_counts   = val_df[[c for c in val_df.columns if c.startswith("label_")]].sum()
+
+    # print("Train counts:\n", train_counts)
+    # print("\nVal counts:\n", val_counts)
+
+    # # Normalize (percentage of dataset with each type)
+    # train_pct = train_counts / len(train_df)
+    # val_pct   = val_counts / len(val_df)
+
+    # print("\nTrain distribution (%):\n", train_pct.round(3))
+    # print("\nVal distribution (%):\n", val_pct.round(3))
 
     train_datagen = ImageDataGenerator(
         rescale=1./255,
-        zoom_range=0,          # random zoom up to +-20%
+        zoom_range=[0.7,1],          # random zoom up to +-20%
         horizontal_flip=True,    # randomly flip horizontally
-        vertical_flip=True,
-        rotation_range=30,       # small rotations
-        brightness_range=[0.7, 1.3],
+        rotation_range=20,       # small rotations
+        brightness_range=[0.9, 1.3],
         fill_mode='nearest'      # fill gaps after shifts/rotations
     )
 
@@ -70,7 +94,7 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=32,
+        batch_size=16,
         shuffle=True
     )
 
@@ -80,7 +104,7 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=32,
+        batch_size=16,
         shuffle=False
     )
 
@@ -90,18 +114,32 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=32,
+        batch_size=16,
         shuffle=False
     )
 
+    
+    # labels = df[[c for c in df.columns if c.startswith("label_")]].values
+    # class_counts = labels.sum(axis=0)   # count positives for each type
+    # total_samples = labels.shape[0]
+    # num_classes = labels.shape[1]
+
+    # class_weights = {}
+    # for i in range(num_classes):
+    #     if class_counts[i] > 0:
+    #         class_weights[i] = total_samples / (num_classes * class_counts[i])
+    #     else:
+    #         class_weights[i] = 1.0
+
     return train_gen, val_gen, full_gen, df
 
-# train_gen, val_gen, full_gen,df = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+if __name__ == '__main__':
+    # train_gen, val_gen, full_gen,df = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
 
-# x_batch, y_batch = next(iter(train_gen))
+    # x_batch, y_batch = next(iter(train_gen))
 
-# print(x_batch.shape)  
-# print(y_batch.shape)  
-# print(y_batch[1])
+    # print(x_batch.shape)  
+    # print(y_batch.shape)  
+    # print(y_batch[1])
 
-get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+    get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
