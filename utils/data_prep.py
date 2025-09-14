@@ -3,7 +3,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
 from sklearn.model_selection import train_test_split
 
-def get_data_generators(csv_dir, img_dir):
+def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
     df = pd.read_csv(csv_dir)
     df = df.drop(df.index[721:801])
     df = df[['name','type1','type2', 'pokedex_number']]
@@ -68,7 +68,7 @@ def get_data_generators(csv_dir, img_dir):
         train_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(256, 256),
+        target_size=img_size,
         class_mode='raw',
         batch_size=32,
         shuffle=True
@@ -78,7 +78,7 @@ def get_data_generators(csv_dir, img_dir):
         val_df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(256, 256),
+        target_size=img_size,
         class_mode='raw',
         batch_size=32,
         shuffle=False
@@ -88,7 +88,7 @@ def get_data_generators(csv_dir, img_dir):
         dataframe=df,
         x_col='img_path',
         y_col=label_cols,
-        target_size=(256, 256),
+        target_size=img_size,
         class_mode='raw',
         batch_size=32,
         shuffle=False

@@ -13,13 +13,14 @@ POKEMON_INDEX = urljoin(BASE_URL, "/pokemon/")
 POKEMON_IMG = urljoin(BASE_URL, "/images/pokemon/")
 
 MODEL_PATH = "models/poke_type_v2.0_0.5acc.h5"
+# MODEL_PATH = "models\classifier2.h5"
 # MODEL_PATH = "models/poke_type_v2.1(0.44acc).h5"
 # MODEL_PATH = "models/poke_type_70acc-99auc_v1.h5"
 
 TYPES = {'bug': 0, 'dark': 1, 'dragon': 2, 'electric': 3, 'fairy': 4, 'fighting': 5, 'fire': 6, 'flying': 7, 'ghost': 8, 'grass': 9, 'ground': 10, 'ice': 11, 'normal': 12, 'poison': 13, 'psychic': 14, 'rock': 15, 'steel': 16, 'water': 17}
 TYPE_INDEX = ['bug','dark','dragon','electric','fairy','fighting','fire','flying','ghost','grass','ground','ice','normal','poison','psychic','rock','steel','water']
 
-def load_and_prepare_image(img_path, target_size=(224,224)):
+def load_and_prepare_image(img_path, target_size=(32,32)):
     response = requests.get(POKEMON_IMG+img_path, stream=True)
     response.raise_for_status()  # make sure download was successful
     img = image.load_img(BytesIO(response.content), target_size=target_size)
