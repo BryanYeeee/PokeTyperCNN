@@ -3,9 +3,10 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
 from sklearn.model_selection import train_test_split
 
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 
-def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
+def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
     df = pd.read_csv(csv_dir)
     df = df.drop(df.index[721:801])
     df = df[['name','type1','type2', 'pokedex_number']]
@@ -77,16 +78,19 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
     # print("\nVal distribution (%):\n", val_pct.round(3))
 
     train_datagen = ImageDataGenerator(
-        rescale=1./255,
-        zoom_range=[0.7,1],          # random zoom up to +-20%
+        preprocessing_function=preprocess_input,
+        # rescale=1./255,
+        zoom_range=[1.2,1.6],         
+        shear_range=20,
         horizontal_flip=True,    # randomly flip horizontally
-        rotation_range=20,       # small rotations
-        brightness_range=[0.9, 1.3],
-        fill_mode='nearest'      # fill gaps after shifts/rotations
+        height_shift_range=0.15,
+        width_shift_range=0.15,
+        rotation_range=45,       # small rotations
+        brightness_range=[0.8, 1.3],fill_mode='nearest'
     )
 
-    val_datagen = ImageDataGenerator(rescale=1./255) 
-    full_datagen = ImageDataGenerator(rescale=1./255)
+    val_datagen = ImageDataGenerator(preprocessing_function=preprocess_input) 
+    full_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
     train_gen = train_datagen.flow_from_dataframe(
         train_df,
@@ -94,7 +98,7 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=16,
+        batch_size=batch_size,
         shuffle=True
     )
 
@@ -104,7 +108,7 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=16,
+        batch_size=batch_size,
         shuffle=False
     )
 
@@ -114,7 +118,7 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224)):
         y_col=label_cols,
         target_size=img_size,
         class_mode='raw',
-        batch_size=16,
+        batch_size=batch_size,
         shuffle=False
     )
 

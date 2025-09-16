@@ -3,15 +3,14 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from utils.data_prep import get_data_generators
 # Load model
-model = load_model("models\poke_type_(64x64,0.79auc).h5")
+model = load_model("models/test,85auc.h5")
 
 # Get data generators again (so you have val_gen to test on)
 train_gen, val_gen, full_gen, df = get_data_generators(
     "./data/pokemon.csv",
-    "./data/pokemon-img/pokemon/pokemon/", img_size=(64,64)
+    "./data/pokemon-img/pokemon/pokemon/", img_size=(224,224)
 )
 
-# print( model.evaluate(full_gen, verbose=1))
 
 # print(f"Validation Loss: {loss:.4f}")
 # print(f"Validation Accuracy: {acc:.4f}")
@@ -35,17 +34,17 @@ total = 0
 cor = 0
 fullcor=0
 for i, (x, y) in enumerate(full_gen): 
-    batch_indices = full_gen.index_array[16*i:16*i+16]
+    batch_indices = full_gen.index_array[32*i:32*i+32]
     probs = model.predict(x, verbose=0)
     # print(df.iloc[idx]['name'])
     # break
     
     for j, idx in enumerate(batch_indices):
         pred_labels = (probs[j] >= 0.5).astype(int)
-        if pred_labels.sum() == 0:
-            top_indices = probs[j].argsort()[-1:][::-1] 
-            pred_labels = np.zeros_like(pred_labels)
-            pred_labels[top_indices] = 1
+        # if pred_labels.sum() == 0:
+        #     top_indices = probs[j].argsort()[-1:][::-1] 
+        #     pred_labels = np.zeros_like(pred_labels)
+        #     pred_labels[top_indices] = 1
         true_labels = y[j].astype(int)
 
         pred_types = {t for t, p in zip(type_names, pred_labels) if p == 1}
@@ -67,6 +66,7 @@ print("total",total)
 print("total types",tot)
 print("correct types", cor,cor/tot)
 print("full correct", fullcor, fullcor/total)
+print( model.evaluate(full_gen, verbose=1))
     
 
 

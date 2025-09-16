@@ -6,14 +6,15 @@ from tensorflow.keras.preprocessing import image
 from urllib.parse import urljoin
 import numpy as np
 import matplotlib.pyplot as plt
-# from io import BytesIO
+from tensorflow.keras.applications.efficientnet import preprocess_input
 import os
 
 BASE_URL = "https://phoenixdex.alteredorigin.net"
 POKEMON_INDEX = urljoin(BASE_URL, "/pokemon/")
 POKEMON_IMG = urljoin(BASE_URL, "/images/pokemon/")
 
-MODEL_PATH = "models\poke_type_(64x64,0.6auc).h5"
+# MODEL_PATH = "models/basic/poke_type_(32x32,0.6auc).h5"
+MODEL_PATH = "models\poke_efficnet_(224,0.74auc).h5"
 # MODEL_PATH = "models\classifier2.h5"
 # MODEL_PATH = "models/poke_type_v2.1(0.44acc).h5"
 # MODEL_PATH = "models/poke_type_70acc-99auc_v1.h5"
@@ -75,36 +76,39 @@ def scrape_index_page(index_url=POKEMON_INDEX):
         #     break
         
     df = pd.DataFrame(rows, columns=["name","type1","type2","img"]+[f'label_{i}' for i in range(len(TYPES))])
-    # df.to_csv("phoenixdex_pokemon.csv", index=False)
+    df.to_csv("phoenixdex_pokemon.csv", index=False)
     return
 
 if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
+    df.to_csv("phoenixdex_pokemon.csv", index=False)
+    df.loc['Nesubian Lapras', 'type2'] = '11'
+
+    x=1/0
     model = load_model(MODEL_PATH)
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
     df['img_fullpath'] = df['img'].apply(lambda fn: os.path.join('data\\fakemon-images', fn))
-    full_datagen = ImageDataGenerator(rescale=1./255)
+    full_datagen = ImageDataGenerator(
+        preprocessing_function=preprocess_input)
     full_gen = full_datagen.flow_from_dataframe(
         dataframe=df,
         x_col='img_fullpath',
         y_col=label_cols,
-        target_size=(64,64),
+        target_size=(224,224),
         class_mode='raw',
         batch_size=16,
         shuffle=False
     )
-    # print(model.evaluate(full_gen,verbose=1))
-    # # print(df.head())
+    # print(df.head())
     # x, y = next(full_gen)
     # print(x.shape, y.shape)
 
     # plt.imshow(x[0])
     # plt.show()
-    # x=1/0
     type_names = sorted(set(df['type1']).union(set(df['type2'].dropna())))
     tot = 0
     total = 0
@@ -136,6 +140,7 @@ if __name__ == "__main__":
             if pred_types == true_types:
                 fullcor=fullcor+1
             cor=cor+len(pred_types.intersection(true_types))
+        # break
         if i == 18:
             break
         # break
@@ -143,4 +148,5 @@ if __name__ == "__main__":
     print("total types",tot)
     print("correct types", cor,cor/tot)
     print("full correct", fullcor, fullcor/total)
+    print(model.evaluate(full_gen,verbose=1))
     
