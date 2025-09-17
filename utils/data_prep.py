@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
 from sklearn.model_selection import train_test_split
+import os
 
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
@@ -52,30 +53,24 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
     # print(missing_files.tolist())
     # print(df.columns)
 
-    # Prepare labels
-    # labels = df[[c for c in df.columns if c.startswith("label_")]].values
+    # train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
+    train_df = df
+    # fake_gen = 0
+    fake_df = pd.read_csv('../data/phoenixdex_pokemon.csv')
+    
 
-    # # Create stratified splitter
-    # msss = MultilabelStratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-
-    # for train_idx, val_idx in msss.split(df, labels):
-    #     train_df = df.iloc[train_idx]
-    #     val_df = df.iloc[val_idx]
-    train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
-
-    # Count type distribution in train/val
-    # train_counts = train_df[[c for c in train_df.columns if c.startswith("label_")]].sum()
-    # val_counts   = val_df[[c for c in val_df.columns if c.startswith("label_")]].sum()
-
-    # print("Train counts:\n", train_counts)
-    # print("\nVal counts:\n", val_counts)
-
-    # # Normalize (percentage of dataset with each type)
-    # train_pct = train_counts / len(train_df)
-    # val_pct   = val_counts / len(val_df)
-
-    # print("\nTrain distribution (%):\n", train_pct.round(3))
-    # print("\nVal distribution (%):\n", val_pct.round(3))
+    fake_df['img_fullpath'] = fake_df['img'].apply(lambda fn: os.path.join('../data/fakemon-images-blackbg', fn))
+    fake_datagen = ImageDataGenerator(
+        preprocessing_function=preprocess_input)
+    fake_gen = fake_datagen.flow_from_dataframe(
+        dataframe=fake_df,
+        x_col='img_fullpath',
+        y_col=label_cols,
+        target_size=img_size,
+        class_mode='raw',
+        batch_size=batch_size,
+        shuffle=False
+    )
 
     train_datagen = ImageDataGenerator(
         preprocessing_function=preprocess_input,
@@ -89,9 +84,6 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
         brightness_range=[0.8, 1.3],fill_mode='nearest'
     )
 
-    val_datagen = ImageDataGenerator(preprocessing_function=preprocess_input) 
-    full_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
-
     train_gen = train_datagen.flow_from_dataframe(
         train_df,
         x_col='img_path',
@@ -101,41 +93,13 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
         batch_size=batch_size,
         shuffle=True
     )
-
-    val_gen = val_datagen.flow_from_dataframe(
-        val_df,
-        x_col='img_path',
-        y_col=label_cols,
-        target_size=img_size,
-        class_mode='raw',
-        batch_size=batch_size,
-        shuffle=False
-    )
-
-    full_gen = full_datagen.flow_from_dataframe(
-        dataframe=df,
-        x_col='img_path',
-        y_col=label_cols,
-        target_size=img_size,
-        class_mode='raw',
-        batch_size=batch_size,
-        shuffle=False
-    )
-
     
     # labels = df[[c for c in df.columns if c.startswith("label_")]].values
     # class_counts = labels.sum(axis=0)   # count positives for each type
     # total_samples = labels.shape[0]
     # num_classes = labels.shape[1]
 
-    # class_weights = {}
-    # for i in range(num_classes):
-    #     if class_counts[i] > 0:
-    #         class_weights[i] = total_samples / (num_classes * class_counts[i])
-    #     else:
-    #         class_weights[i] = 1.0
-
-    return train_gen, val_gen, full_gen, df
+    return train_gen, fake_gen, df
 
 if __name__ == '__main__':
     # train_gen, val_gen, full_gen,df = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
@@ -146,4 +110,13 @@ if __name__ == '__main__':
     # print(y_batch.shape)  
     # print(y_batch[1])
 
-    get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+    t, v, _ = get_data_generators('./data/pokemon.csv', './data/pokemon-img/pokemon/pokemon/')
+
+    import matplotlib.pyplot as plt
+    x_batch, y_batch = next(iter(v))
+    x_batch, y_batch = next(iter(v))
+    print("x_batch:", x_batch.shape, "dtype:", x_batch.dtype)
+    print("min:", x_batch.min(), "max:", x_batch.max())
+
+    plt.imshow(x_batch[0].astype("uint8") )
+    plt.show()

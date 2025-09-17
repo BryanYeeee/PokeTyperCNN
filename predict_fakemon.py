@@ -14,7 +14,7 @@ POKEMON_INDEX = urljoin(BASE_URL, "/pokemon/")
 POKEMON_IMG = urljoin(BASE_URL, "/images/pokemon/")
 
 # MODEL_PATH = "models/basic/poke_type_(32x32,0.6auc).h5"
-MODEL_PATH = "models\poke_efficnet_(224,0.74auc).h5"
+# MODEL_PATH = ""
 # MODEL_PATH = "models\classifier2.h5"
 # MODEL_PATH = "models/poke_type_v2.1(0.44acc).h5"
 # MODEL_PATH = "models/poke_type_70acc-99auc_v1.h5"
@@ -83,15 +83,13 @@ if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
-    df.to_csv("phoenixdex_pokemon.csv", index=False)
-    df.loc['Nesubian Lapras', 'type2'] = '11'
-
-    x=1/0
-    model = load_model(MODEL_PATH)
+    model = load_model('models\poke_efficnet_(224,0.69auc).h5')
+    model2 = load_model('models\poke_efficnet_(224,0.70auc).h5')
+    model3 = load_model('models\poke_efficnet(0.716auc).h5')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
-    df['img_fullpath'] = df['img'].apply(lambda fn: os.path.join('data\\fakemon-images', fn))
+    df['img_fullpath'] = df['img'].apply(lambda fn: os.path.join('data\\fakemon-images-blackbg', fn))
     full_datagen = ImageDataGenerator(
         preprocessing_function=preprocess_input)
     full_gen = full_datagen.flow_from_dataframe(
@@ -105,48 +103,100 @@ if __name__ == "__main__":
     )
     # print(df.head())
     # x, y = next(full_gen)
+    # x, y = next(full_gen)
     # print(x.shape, y.shape)
 
-    # plt.imshow(x[0])
+    # plt.imshow(x[0].astype("uint8"))
     # plt.show()
+
+    # x=1/0
     type_names = sorted(set(df['type1']).union(set(df['type2'].dropna())))
-    tot = 0
-    total = 0
-    cor = 0
-    fullcor=0
+    from collections import Counter
+
+    venn_counts = Counter()  # counts across dataset
+    c = Counter()  # counts across dataset
+
     for i, (x, y) in enumerate(full_gen): 
         batch_indices = full_gen.index_array[16*i:16*i+16]
-        probs = model.predict(x, verbose=0)
-        # print(df.iloc[idx]['name'])
-        # break
-        
+        probs1 = model.predict(x, verbose=0)
+        probs2 = model2.predict(x, verbose=0)
+        probs3 = model3.predict(x, verbose=0)
+
         for j, idx in enumerate(batch_indices):
-            pred_labels = (probs[j] >= 0.5).astype(int)
-            if pred_labels.sum() == 0:
-                top_indices = probs[j].argsort()[-1:][::-1] 
-                pred_labels = np.zeros_like(pred_labels)
-                pred_labels[top_indices] = 1
-            true_labels = y[j].astype(int)
+            # probs1 = [probs1[k] + probs2[k] for k in range(len(probs1))]
+            # pred1 = (probs1[j] > 100000).astype(int)
+            # top_indices = probs1[j].argsort()[-2:][::-1]
+            # pred1[top_indices] = 1
+            # binarize predictions
+            pred1 = (probs1[j] >= 0.5).astype(int)
+            if pred1.sum() == 0:
+                top_indices = probs1[j].argsort()[-2:][::-1]
+                pred1[top_indices] = 1
 
-            pred_types = {t for t, p in zip(type_names, pred_labels) if p == 1}
-            true_types = {t for t, p in zip(type_names, true_labels) if p == 1}
+            pred2 = (probs2[j] >= 0.5).astype(int)
+            if pred2.sum() == 0:
+                top_indices2 = probs2[j].argsort()[-2:][::-1]
+                pred2[top_indices2] = 1
 
-            print(df.iloc[idx]['name'])
-            print("  Predicted types:", pred_types)
-            print("  Actual types   :", true_types)
+            pred3 = (probs3[j] >= 0.5).astype(int)
+            if pred3.sum() == 0:
+                top_indices3 = probs3[j].argsort()[-2:][::-1]
+                pred3[top_indices3] = 1
+
+            true = y[j].astype(int)
+            
+
+            set1 = {t for t, p in zip(type_names, pred1) if p == 1}
+            set2 = {t for t, p in zip(type_names, pred2) if p == 1}
+            set3 = {t for t, p in zip(type_names, pred3) if p == 1}
+            true_set = {t for t, p in zip(type_names, true) if p == 1}
+
+            # --- Venn counts ---
+            c["model1_correct"] += len(set3 & true_set)
+            c["model1_perfect"] += 1 if set3 == true_set else 0
+            # venn_counts["model2_correct"] += len(set2 & true_set)
+            # venn_counts["model2_perfect"] += 1 if set2 == true_set else 0
+            # venn_counts["model1_only_correct"] += len((set1 & true_set) - set2)
+            # venn_counts["model1_only_perfect"] += 1 if set2 == true_set and set1 != set2 else 0
+            # venn_counts["model2_only_correct"] += len((set2 & true_set) - set1)
+            # venn_counts["model2_only_perfect"] += 1 if set1 == true_set and set1 != set2 else 0
+            # venn_counts["both_correct"]   += len((set1 & set2) & true_set)
+            # venn_counts["both_perfect"]   += 1 if set2 == true_set and set1 == set2 else 0
+            # venn_counts["none"]   += 1 if len((set1 & set2) & true_set) == 0 else 0
+            only1 = (set1 - set2 - set3)
+            only2 = (set2 - set1 - set3)
+            only3 = (set3 - set1 - set2)
+            both12 = (set1 & set2) - set3
+            both13 = (set1 & set3) - set2
+            both23 = (set2 & set3) - set1
+            all123 = set1 & set2 & set3
+
+            venn_counts['100'] += len(only1)
+            venn_counts['010'] += len(only2)
+            venn_counts['001'] += len(only3)
+            venn_counts['110'] += len(both12)
+            venn_counts['101'] += len(both13)
+            venn_counts['011'] += len(both23)
+            venn_counts['111'] += len(all123)
+
+            # venn_counts["XXmodel1_only"] += len(set1 - set2)
+            # venn_counts["XXmodel2_only"] += len(set2 - set1)
+            # venn_counts["XX3&2"]        += len(set1 & set2)
+            print(df.iloc[idx]['name']) 
+            print(" Predicted types :", set1) 
+            print(" Predicted types2:", set2) 
+            print(" Predicted types3:", set3) 
+            print(" Actual types :", true_set) 
             print("-" * 40)
-            tot = tot+len(true_types)
-            total= total+1
-            if pred_types == true_types:
-                fullcor=fullcor+1
-            cor=cor+len(pred_types.intersection(true_types))
-        # break
-        if i == 18:
+        if i == 18:  # safety break
             break
-        # break
-    print("total",total)
-    print("total types",tot)
-    print("correct types", cor,cor/tot)
-    print("full correct", fullcor, fullcor/total)
+
+    # print("Venn-style stats:")
+    print(c)
+    from matplotlib_venn import venn3
+    import matplotlib.pyplot as plt
+    venn3(subsets=venn_counts, set_labels=("Model 1", "Model 2", "Model 3"))
+    plt.show()
+
     print(model.evaluate(full_gen,verbose=1))
     
