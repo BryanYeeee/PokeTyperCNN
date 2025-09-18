@@ -83,9 +83,9 @@ if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
-    model = load_model('models\poke_efficnet_(224,0.69auc).h5')
-    model2 = load_model('models\poke_efficnet_(224,0.70auc).h5')
-    model3 = load_model('models\poke_efficnet(0.716auc).h5')
+    model = load_model('models/resnet50/resnet50,0.72auc.keras')
+    model2 = load_model('comp_resnet50,0.724auc.keras')
+    model3 = load_model('models\EfficientNetB0\poke_efficnet(0.716auc).h5')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
@@ -152,17 +152,19 @@ if __name__ == "__main__":
             true_set = {t for t, p in zip(type_names, true) if p == 1}
 
             # --- Venn counts ---
-            c["model1_correct"] += len(set3 & true_set)
-            c["model1_perfect"] += 1 if set3 == true_set else 0
-            # venn_counts["model2_correct"] += len(set2 & true_set)
-            # venn_counts["model2_perfect"] += 1 if set2 == true_set else 0
-            # venn_counts["model1_only_correct"] += len((set1 & true_set) - set2)
-            # venn_counts["model1_only_perfect"] += 1 if set2 == true_set and set1 != set2 else 0
-            # venn_counts["model2_only_correct"] += len((set2 & true_set) - set1)
-            # venn_counts["model2_only_perfect"] += 1 if set1 == true_set and set1 != set2 else 0
-            # venn_counts["both_correct"]   += len((set1 & set2) & true_set)
-            # venn_counts["both_perfect"]   += 1 if set2 == true_set and set1 == set2 else 0
-            # venn_counts["none"]   += 1 if len((set1 & set2) & true_set) == 0 else 0
+            c["model1_correct"] += len(set1 & true_set)
+            c["model1_perfect"] += 1 if set1 == true_set else 0
+            c["model2_correct"] += len(set2 & true_set)
+            c["model2_perfect"] += 1 if set2 == true_set else 0
+            c["model3_correct"] += len(set3 & true_set)
+            c["model3_perfect"] += 1 if set3 == true_set else 0
+            # c["model1_only_correct"] += len((set1 & true_set) - set2)
+            # c["model1_only_perfect"] += 1 if set2 == true_set and set1 != set2 else 0
+            # c["model2_only_correct"] += len((set2 & true_set) - set1)
+            # c["model2_only_perfect"] += 1 if set1 == true_set and set1 != set2 else 0
+            # c["both_correct"]   += len((set1 & set2) & true_set)
+            # c["both_perfect"]   += 1 if set2 == true_set and set1 == set2 else 0
+            # c["none"]   += 1 if len((set1 & set2) & true_set) == 0 else 0
             only1 = (set1 - set2 - set3)
             only2 = (set2 - set1 - set3)
             only3 = (set3 - set1 - set2)

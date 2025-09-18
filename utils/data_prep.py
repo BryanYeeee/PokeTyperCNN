@@ -4,7 +4,8 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 import os
 
-from tensorflow.keras.applications.efficientnet import preprocess_input
+
+from keras.applications.resnet50 import preprocess_input
 
 
 def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
