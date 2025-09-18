@@ -1,3 +1,46 @@
 data/
 utils/__pycache__/
 models/resnet50/
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+poke-typer-frontend/node_modules
+poke-typer-frontend/.pnp
+poke-typer-frontend/.pnp.*
+poke-typer-frontend/.yarn/*
+poke-typer-frontend/!.yarn/patches
+poke-typer-frontend/!.yarn/plugins
+poke-typer-frontend/!.yarn/releases
+poke-typer-frontend/!.yarn/versions
+
+# testing
+poke-typer-frontend/coverage
+
+# next.js
+poke-typer-frontend/.next/
+poke-typer-frontend/out/
+
+# production
+poke-typer-frontend/build
+
+# misc
+poke-typer-frontend/.DS_Store
+poke-typer-frontend/*.pem
+
+# debug
+poke-typer-frontend/npm-debug.log*
+poke-typer-frontend/yarn-debug.log*
+poke-typer-frontend/yarn-error.log*
+poke-typer-frontend/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+poke-typer-frontend/.env*
+
+# vercel
+poke-typer-frontend/.vercel
+
+# typescript
+poke-typer-frontend/*.tsbuildinfo
+poke-typer-frontend/next-env.d.ts
