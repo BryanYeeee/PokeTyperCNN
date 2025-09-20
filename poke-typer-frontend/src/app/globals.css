@@ -5,7 +5,8 @@
   --foreground: #171717;
   --redorange: linear-gradient(#f4442d, #f4442da2);
   --red: linear-gradient(#c41f1db8, #c41f1d);
-  --grey: #dedede;
+  --darkred: linear-gradient(#6e1210b8, #9b1916, #6e1210b8);
+  --grey: #d4d4d4;
   --darkgrey: #222222;
 }
 

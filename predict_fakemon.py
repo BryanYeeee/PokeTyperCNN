@@ -83,9 +83,9 @@ if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
-    model = load_model('models/resnet50/resnet50,0.72auc.keras')
-    model2 = load_model('comp_resnet50,0.724auc.keras')
-    model3 = load_model('models\EfficientNetB0\poke_efficnet(0.716auc).h5')
+    model = load_model('models\EfficientNetB0\poke_efficnet(0.716auc).h5')
+    model2 = load_model('models\EfficientNetB0\poke_efficnet_(224,0.70auc).h5')
+    model3 = load_model('models\EfficientNetB0\poke_efficnet_(224,0.69auc).h5')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
@@ -152,12 +152,12 @@ if __name__ == "__main__":
             true_set = {t for t, p in zip(type_names, true) if p == 1}
 
             # --- Venn counts ---
-            c["model1_correct"] += len(set1 & true_set)
-            c["model1_perfect"] += 1 if set1 == true_set else 0
-            c["model2_correct"] += len(set2 & true_set)
-            c["model2_perfect"] += 1 if set2 == true_set else 0
-            c["model3_correct"] += len(set3 & true_set)
-            c["model3_perfect"] += 1 if set3 == true_set else 0
+            c["modela_correct"] += len(set1 & true_set)
+            c["modela_perfect"] += 1 if set1 == true_set else 0
+            c["modelb_correct"] += len(set2 & true_set)
+            c["modelb_perfect"] += 1 if set2 == true_set else 0
+            c["modelc_correct"] += len(set3 & true_set)
+            c["modelc_perfect"] += 1 if set3 == true_set else 0
             # c["model1_only_correct"] += len((set1 & true_set) - set2)
             # c["model1_only_perfect"] += 1 if set2 == true_set and set1 != set2 else 0
             # c["model2_only_correct"] += len((set2 & true_set) - set1)
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     print(c)
     from matplotlib_venn import venn3
     import matplotlib.pyplot as plt
-    venn3(subsets=venn_counts, set_labels=("Model 1", "Model 2", "Model 3"))
+    venn3(subsets=venn_counts, set_labels=("Model A", "Model B", "Model C"))
     plt.show()
 
     print(model.evaluate(full_gen,verbose=1))

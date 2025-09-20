@@ -1,8 +1,9 @@
-const TextPanel = () => {
+const HowPanel = () => {
   return (
     <div
       className='h-4/5 w-full bg-black font-mono text-sm p-2 overflow-hidden'
-      data-augmented-ui='tl-clip tr-2-clip-x br-2-clip-y bl-2-clip-x both'
+      data-augmented-ui='tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x r-clip-y both'
+      style={{ '--aug-r-extend1': '50%' }}
     >
       <div className='h-full w-full text-green-400 px-4 py-2 overflow-y-auto [direction:rtl]'>
         <div className='[direction:ltr] text-left space-y-2'>
@@ -14,7 +15,7 @@ const TextPanel = () => {
           <pre className='whitespace-pre-wrap'>
             {`- Small dataset of 721 images each with 18 possible types as one-hot vectors
 - Random data augmentation with rotations, reflections, brightness, etc.
-- Imbalanced distribution of Pokémon types
+- Imbalanced distribution of Pokemon types
     - 118 water types (~16%)
     - 37 ice types (~5%)
 `}
@@ -64,9 +65,9 @@ const TextPanel = () => {
             </a>
           </div>
 
-          <div className='border-1 text-green-800'></div>
+          <div className='border-1 text-green-800' />
 
-          <span className="text-lg">Building The Model:</span>
+          <span className='text-lg'>Building The Model:</span>
           <pre className='whitespace-pre-wrap'>
             {`> Step 1: Base model = EfficientNetB0 (pretrained on ImageNet)
 > Step 2: Base frozen (no training on convolutional layers)
@@ -84,11 +85,11 @@ const TextPanel = () => {
           >
             [Keras Transfer Learning Guide]
           </a>
-          <div className='border-1 text-green-800 mt-4'></div>
+          <div className='border-1 text-green-800 mt-4' />
         </div>
       </div>
     </div>
   )
 }
 
-export default TextPanel
+export default HowPanel
