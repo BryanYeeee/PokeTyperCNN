@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import DexCircles from './components/dexCircles'
+import TextPanel from './components/textPanel'
+import StartPanel from './components/startPanel'
 
 export default function Home () {
   return (
@@ -27,26 +29,28 @@ export default function Home () {
             }}
           >
             <div
-              className='h-[calc(100%-5px)] w-full foreground'
+              className='h-[calc(100%-5px)] w-full foreground flex items-center px-12 pt-[4rem]'
               data-augmented-ui='bl-clip br-clip  tl-clip-x both'
               style={{
                 '--aug-tl1': '4rem',
                 '--aug-tl-inset1': '50.5%'
               }}
             >
-              2
+              <StartPanel />
             </div>
           </div>
         </div>
       </div>
       <div
-        className='h-17/20 w-full foreground'
-        data-augmented-ui='bl-clip br-clip tr-clip-x both'
+        className='asd h-17/20 w-full foreground flex items-center px-12 pt-[4rem] overflow-hidden'
+        data-augmented-ui='bl-clip br-clip tr-2-clip-x both'
         style={{
           '--aug-tr1': '4rem',
-          '--aug-tr-inset2': '50%'
+          '--aug-tr-extend1': 'calc(50% - 15px)',
+          '--aug-tr2': '15px'
         }}
       >
+        <TextPanel />
       </div>
     </div>
   )

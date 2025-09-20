@@ -99,6 +99,17 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
     # class_counts = labels.sum(axis=0)   # count positives for each type
     # total_samples = labels.shape[0]
     # num_classes = labels.shape[1]
+    water_idx = type_to_idx['water']
+    dragon_idx = type_to_idx['dragon']
+    ice_idx = type_to_idx['ice']
+
+    num_water = labels[:, water_idx].sum()
+    num_dragon = labels[:, dragon_idx].sum()
+    num_ice = labels[:, ice_idx].sum()
+
+    print(f"Water types: {int(num_water)}")
+    print(f"Dragon types: {int(num_dragon)}")
+    print(f"Ice types: {int(num_ice)}")
 
     return train_gen, fake_gen, df
 
