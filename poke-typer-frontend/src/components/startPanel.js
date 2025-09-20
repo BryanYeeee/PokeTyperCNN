@@ -1,6 +1,14 @@
+'use client'
 import BoltDecal from '@/components/BoltDecal'
+import { useRouter } from 'next/navigation'
 
 const StartPanel = ({ curPanel, setCurPanel }) => {
+  const router = useRouter() // initialize router
+
+  const handleGetStarted = () => {
+    router.push('/customdex') // replace with your desired route
+  }
+
   return (
     <div className='h-4/5 w-full flex flex-col items-center justify-start text-center space-y-6'>
       <div
@@ -67,6 +75,7 @@ const StartPanel = ({ curPanel, setCurPanel }) => {
             '--aug-border-bg': 'black',
             '--aug-inlay-bg': '#22c55e'
           }}
+          onClick={handleGetStarted}
         >
           Get Started
         </button>
