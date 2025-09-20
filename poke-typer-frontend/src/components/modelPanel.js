@@ -69,6 +69,9 @@ const ModelPanel = () => {
               className='rounded-lg border border-green-700'
             />
           </div>
+          <pre className='whitespace-pre-wrap'>
+            {`Each model has a considerable amount of unique predictions. While they may be incorrect, I thought it would still be worth having multiple models to show more possible types per input.`}
+          </pre>
           <div className='border-1 text-green-800' />
           <span className='text-lg'>Problems with the Results:</span>
           <pre className='whitespace-pre-wrap'>

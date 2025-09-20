@@ -42,7 +42,7 @@ const HowPanel = () => {
                 href='https://www.kaggle.com/datasets/kvpratama/pokemon-images-dataset'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-green-300 hover:text-green-100'
+                className='text-green-300 hover:text-green-100 hover:underline'
               >
                 [kaggle images]
               </a>
@@ -50,7 +50,7 @@ const HowPanel = () => {
                 href='https://www.kaggle.com/datasets/rounakbanik/pokemon'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-green-300 hover:text-green-100'
+                className='text-green-300 hover:text-green-100 hover:underline'
               >
                 [kaggle data]
               </a>
@@ -59,7 +59,7 @@ const HowPanel = () => {
               href='https://phoenixdex.alteredorigin.net/pokemon/'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-green-300 hover:text-green-100'
+              className='text-green-300 hover:text-green-100 hover:underline'
             >
               [phoenixsong fakemon data]
             </a>
@@ -81,7 +81,7 @@ const HowPanel = () => {
             href='https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/#transfer-learning-from-pretrained-weights'
             target='_blank'
             rel='noopener noreferrer'
-            className='text-green-300 hover:text-green-100'
+            className='text-green-300 hover:text-green-100 hover:underline'
           >
             [Keras Transfer Learning Guide]
           </a>
