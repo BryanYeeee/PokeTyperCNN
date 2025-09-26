@@ -1,7 +1,13 @@
+'use client'
 import BoltDecal from '@/components/BoltDecal'
+import Dex from '@/components/dex'
 import DexCircles from '@/components/dexCircles'
+import Predictor from '@/components/predictor'
+import { useState } from 'react'
 
 const CustomDex = () => {
+  const [dexList, setDexList] = useState(['a', 'b', 'c'])
+
   return (
     <div
       id='bg-svg'
@@ -28,22 +34,25 @@ const CustomDex = () => {
             }}
           >
             <div
-              className='h-[calc(100%-5px)] w-full foreground flex items-center px-12 pt-[4rem]'
+              className='h-[calc(100%-5px)] w-full foreground flex items-center p-16 pt-[calc(4rem+15px+(4rem-15px))]'
               data-augmented-ui='bl-clip br-clip  tl-clip-x both'
               style={{
                 '--aug-tl1': '4rem',
                 '--aug-tl-inset1': '50.5%'
               }}
-            ></div>
+            >
+              <Predictor setDexList={setDexList} />
+              <BoltDecal pos={'bottom-8 left-8'} />
+              <BoltDecal pos={'bottom-8 right-8'} />
+            </div>
           </div>
         </div>
-        <BoltDecal pos={'bottom-8 left-8'} />
-        <BoltDecal pos={'bottom-8 right-8'} />
       </div>
       <div
-        className='relative h-full w-1/2 min-w-100 foreground flex items-center px-12 pt-[4rem] overflow-hidden'
+        className='relative h-full w-1/2 min-w-100 foreground flex items-center p-16 overflow-hidden'
         data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
       >
+        <Dex dexList={dexList} />
         <BoltDecal pos='top-8 left-8' />
         <BoltDecal pos='top-8 right-8' />
         <BoltDecal pos='bottom-8 left-8' />
