@@ -86,6 +86,8 @@ if __name__ == "__main__":
     model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
     model2 = load_model('models\EfficientNetB0\poke_efficnet_224_0o70auc.h5')
     model3 = load_model('models\EfficientNetB0\poke_efficnet_224_0o69auc.h5')
+    # model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
+    # model3 = load_model('models/resnet50/resnet50,0.724auc.keras')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
