@@ -1,6 +1,7 @@
 data/
 utils/__pycache__/
 models/resnet50/
+tfjs-env/
 
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.

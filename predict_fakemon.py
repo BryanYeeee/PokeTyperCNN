@@ -83,9 +83,9 @@ if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
-    model = load_model('models\EfficientNetB0\poke_efficnet(0.716auc).h5')
-    model2 = load_model('models\EfficientNetB0\poke_efficnet_(224,0.70auc).h5')
-    model3 = load_model('models\EfficientNetB0\poke_efficnet_(224,0.69auc).h5')
+    model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
+    model2 = load_model('models\EfficientNetB0\poke_efficnet_224_0o70auc.h5')
+    model3 = load_model('models\EfficientNetB0\poke_efficnet_224_0o69auc.h5')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
