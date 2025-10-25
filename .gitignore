@@ -4,6 +4,7 @@ models/resnet50/
 tfjs-env/
 
 poke-typer-backend/venv/
+poke-typer-backend/__pycache__/
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
