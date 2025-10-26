@@ -34,14 +34,14 @@ const CustomDex = () => {
             }}
           >
             <div
-              className='h-[calc(100%-5px)] w-full foreground flex items-center p-16 pt-[calc(4rem+15px+(4rem-15px))]'
+              className='h-[calc(100%-5px)] w-full foreground flex items-center p-12 pt-[calc(3rem+4rem)]'
               data-augmented-ui='bl-clip br-clip  tl-clip-x both'
               style={{
                 '--aug-tl1': '4rem',
                 '--aug-tl-inset1': '50.5%'
               }}
             >
-              <Predictor setDexList={setDexList} />
+              <Predictor/>
               <BoltDecal pos={'bottom-8 left-8'} />
               <BoltDecal pos={'bottom-8 right-8'} />
             </div>

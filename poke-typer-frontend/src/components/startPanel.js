@@ -6,7 +6,7 @@ const StartPanel = ({ curPanel, setCurPanel }) => {
   const router = useRouter() // initialize router
 
   const handleGetStarted = () => {
-    router.push('/customdex') // replace with your desired route
+    router.push('/customdex')
   }
 
   return (
