@@ -57,7 +57,8 @@ const Dex = ({ dexList, setPredictor, refreshDex }) => {
                 alt=''
                 className='h-[2.5rem] aspect-square object-contain'
               />
-              {mon.name}
+              <div className='max-w-1/2'>{mon.name}</div>
+              
             </div>
             <div className='flex gap-4'>
               {/* {JSON.stringify(mon.predictions[selectedModel])} */}

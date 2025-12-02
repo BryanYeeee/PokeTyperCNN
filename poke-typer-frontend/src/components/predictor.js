@@ -23,8 +23,9 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
 
   const handleFileChange = async e => setTarget(e.target.files[0])
 
-  const setTarget = async (f) => {
-    setFile(f)
+  const setTarget = async f => {
+    const fresh = new File([await f.arrayBuffer()], f.name, { type: f.type })
+    setFile(fresh)
     setError(null)
 
     const cache = await getPrediction(f.name)
@@ -138,7 +139,7 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
                 {file ? 'Change Image' : 'Browse Image'}
               </label>
               <button
-                className='text-center px-4 py-1 w-1/2 text-xl font-bold text-black duration-200 hover:scale-110'
+                className='disabled:opacity-80 text-center px-4 py-1 w-1/2 text-xl font-bold text-black duration-200 hover:scale-110'
                 data-augmented-ui='tl-clip tr-clip br-clip bl-clip both'
                 style={{
                   '--aug-border-all': '3px',
