@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import { predictType } from '@/utils/predict.js'
 import { getPrediction, savePrediction } from '@/utils/indexedDB.js'
+import Image from 'next/image'
 
 const emptyPred = {
   latest: 'A',
@@ -100,11 +101,16 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
             className='bg-grey'
             data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
           >
-            <img
-              src={preview}
-              alt=''
-              className='size-48 min-w-48 p-3 object-contain'
-            />
+            <div className='size-48 min-w-48 p-3'>
+              {preview && (
+                <Image
+                  src={preview}
+                  alt=''
+                  width={192}
+                  height={192}
+                />
+              )}
+            </div>
           </div>
           <div className='flex flex-col items-start w-full gap-2'>
             <div className='flex justify-between w-full gap-2 relative'>
@@ -203,4 +209,5 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
   )
 })
 
+Predictor.displayName = 'Predictor'
 export default Predictor

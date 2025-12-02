@@ -1,5 +1,7 @@
 import { deleteItem } from '@/utils/indexedDB'
 import { useState } from 'react'
+import Image from "next/image";
+
 
 const models = ['Latest', 'A', 'B', 'C', 'D', 'E']
 
@@ -52,10 +54,12 @@ const Dex = ({ dexList, setPredictor, refreshDex }) => {
             key={mon.name}
           >
             <div className='flex gap-4'>
-              <img
+              <Image
                 src={mon.img}
                 alt=''
-                className='h-[2.5rem] aspect-square object-contain'
+                width={40}
+                height={40}
+                // className='h-[2.5rem] aspect-square object-contain'
               />
               <div className='max-w-1/2'>{mon.name}</div>
               
