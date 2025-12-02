@@ -6,20 +6,18 @@ A web application that predicts Pokémon types from images using multiple CNN mo
 
 ## Features
 
-- **Upload & Predict**: Upload a Pokémon image and get predicted types from multiple models.
+- **Upload & Predict**: Upload any image and get predicted types from multiple models.
 - **Multiple Models**: Compare predictions across five different models (A–E).
 - **IndexedDB Caching**: Stores predictions and images locally for fast retrieval.
-- **Model Comparison**: See training/validation performance and differences between models.
-- **Interactive Dex**: Browse Pokémon/fakemon and view predictions with quick access.
-- **Data Transparency**: Provides dataset, training details, and validation info.
+- **Interactive Dex**: Browse uploaded images and view predictions with quick access.
 
 ---
 
 ## How It Works
 
-1. **Upload Image**: Users select an image of a Pokémon or fakemon.
+1. **Upload Image**: Users uploads an image of their "Pokemon" and selection of model.
 2. **Model Prediction**: The image is sent to the backend, where CNN models predict type probabilities.
-3. **Store Locally**: Predictions and images are saved in IndexedDB for offline access.
+3. **Store Locally**: Predictions and images are saved in IndexedDB.
 4. **Compare Models**: Users can toggle between different trained models to see variation in predictions.
 
 ---
