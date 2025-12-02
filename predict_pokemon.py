@@ -3,7 +3,7 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from utils.data_prep import get_data_generators
 # Load model
-model = load_model('poke-typer-backend\models\model_C.h5')
+model = load_model('poke-typer-backend\models\model_E.keras')
 
 # Get data generators again (so you have val_gen to test on)
 train_gen, val_gen, df = get_data_generators(

@@ -6,8 +6,8 @@ const ModelPanel = () => {
     { name: 'A', base: 'EfficientNetB0', train: '90.5%', val: '71.6%' },
     { name: 'B', base: 'EfficientNetB0', train: '86.1%', val: '70.9%' },
     { name: 'C', base: 'EfficientNetB0', train: '86.6%', val: '69.9' },
-    { name: 'D', base: 'ResNet50', train: 'XX.X%', val: 'XX.X%' },
-    { name: 'E', base: 'ResNet50', train: 'XX.X%', val: 'XX.X%' }
+    { name: 'D', base: 'ResNet50', train: '92.8%', val: '72.9%' },
+    { name: 'E', base: 'ResNet50', train: '91.7%', val: '72.8%' }
   ]
   return (
     <div

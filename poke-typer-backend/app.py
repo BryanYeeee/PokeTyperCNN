@@ -12,8 +12,8 @@ models = {
     "A": [load_model("models/model_A.h5"), preprocess_effnet],
     "B": [load_model("models/model_B.h5"), preprocess_effnet],
     "C": [load_model("models/model_C.h5"),preprocess_effnet],
-    # "D": [load_model("models/resnet1.h5"),preprocess_resnet],
-    # "E": [load_model("models/resnet2.h5"),preprocess_resnet]
+    "D": [load_model("models/model_D.keras"),preprocess_resnet],
+    "E": [load_model("models/model_E.keras"),preprocess_resnet]
 }
 
 @app.route("/predict/<model_name>", methods=["POST"])

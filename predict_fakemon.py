@@ -87,10 +87,10 @@ if __name__ == "__main__":
     # model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
     # model2 = load_model('models\EfficientNetB0\poke_efficnet_224_0o70auc.h5')
     # model3 = load_model('models\EfficientNetB0\poke_efficnet_224_0o69auc.h5')
-    model = load_model('poke-typer-backend\models\model_A.h5')
-    # model2 = load_model('poke-typer-backend\models\model_B.h5')
+    model = load_model('poke-typer-backend\models\model_D.keras')
+    model2 = load_model('poke-typer-backend\models\model_E.keras')
     # model3 = load_model('models\comp_resnet50,0.72auc.keras')
-    model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
+    # model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
     model3 = load_model('models/resnet50/resnet50,0.724auc.keras')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
