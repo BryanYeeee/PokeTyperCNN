@@ -6,8 +6,8 @@ from tensorflow.keras.preprocessing import image
 from urllib.parse import urljoin
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.applications.efficientnet import preprocess_input
-# from keras.applications.resnet50 import preprocess_input
+# from tensorflow.keras.applications.efficientnet import preprocess_input
+from keras.applications.resnet50 import preprocess_input
 import os
 
 BASE_URL = "https://phoenixdex.alteredorigin.net"
@@ -84,9 +84,12 @@ if __name__ == "__main__":
     # scrape_index_page()
     
     df = pd.read_csv('data\phoenixdex_pokemon.csv')
-    model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
+    # model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
     # model2 = load_model('models\EfficientNetB0\poke_efficnet_224_0o70auc.h5')
     # model3 = load_model('models\EfficientNetB0\poke_efficnet_224_0o69auc.h5')
+    model = load_model('poke-typer-backend\models\model_A.h5')
+    # model2 = load_model('poke-typer-backend\models\model_B.h5')
+    # model3 = load_model('models\comp_resnet50,0.72auc.keras')
     model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
     model3 = load_model('models/resnet50/resnet50,0.724auc.keras')
 

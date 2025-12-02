@@ -3,9 +3,9 @@ const ModelPanel = () => {
   const headers = ['Model', 'Base', 'Training AUC', 'Validation AUC']
 
   const models = [
-    { name: 'A', base: 'EfficientNetB0', train: 'XX.X%', val: 'XX.X%' },
-    { name: 'B', base: 'EfficientNetB0', train: 'XX.X%', val: 'XX.X%' },
-    { name: 'C', base: 'EfficientNetB0', train: 'XX.X%', val: 'XX.X%' },
+    { name: 'A', base: 'EfficientNetB0', train: '90.5%', val: '71.6%' },
+    { name: 'B', base: 'EfficientNetB0', train: '86.1%', val: '70.9%' },
+    { name: 'C', base: 'EfficientNetB0', train: '86.6%', val: '69.9' },
     { name: 'D', base: 'ResNet50', train: 'XX.X%', val: 'XX.X%' },
     { name: 'E', base: 'ResNet50', train: 'XX.X%', val: 'XX.X%' }
   ]

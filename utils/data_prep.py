@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator 
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 import os
 
 
 from keras.applications.resnet50 import preprocess_input
+# from tensorflow.keras.applications.efficientnet import preprocess_input
 
 
 def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
@@ -57,10 +58,10 @@ def get_data_generators(csv_dir, img_dir, img_size=(224,224), batch_size=32):
     # train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
     train_df = df
     # fake_gen = 0
-    fake_df = pd.read_csv('../data/phoenixdex_pokemon.csv')
+    fake_df = pd.read_csv('./data/phoenixdex_pokemon.csv')
     
 
-    fake_df['img_fullpath'] = fake_df['img'].apply(lambda fn: os.path.join('../data/fakemon-images-blackbg', fn))
+    fake_df['img_fullpath'] = fake_df['img'].apply(lambda fn: os.path.join('./data/fakemon-images-blackbg', fn))
     fake_datagen = ImageDataGenerator(
         preprocessing_function=preprocess_input)
     fake_gen = fake_datagen.flow_from_dataframe(
