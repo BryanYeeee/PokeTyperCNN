@@ -5,7 +5,7 @@ const models = ['Latest', 'A', 'B', 'C', 'D', 'E']
 const Dex = ({ dexList, setPredictor }) => {
   const [selectedModel, setSelectedModel] = useState('A')
   return (
-    <div className='w-full min-h-full'>
+    <div className='w-full h-full flex flex-col'>
       <div
         className='w-full h-20 px-8 bg-darkgrey flex items-center'
         data-augmented-ui='tl-clip tr-clip br-clip bl-clip both'
@@ -31,10 +31,10 @@ const Dex = ({ dexList, setPredictor }) => {
           </div>
         </div>
       </div>
-      <div className='font-mono space-y-4 py-4 px-4'>
+      <div className='font-mono space-y-4 py-4 pl-4 pr-8 flex-1 w-full overflow-y-auto overflow-x-hidden'>
         {dexList.map((mon, i) => (
           <div
-            className='w-full h-12 px-4 pt-1 flex justify-between bg-red-300 duration-200 hover:scale-110'
+            className='w-full h-12 px-4 pt-1 flex justify-between bg-red-300 duration-200 origin-left hover:scale-105'
             data-augmented-ui='tl-clip br-2-clip-x both'
             style={{ '--aug-br-extend2': '50%' }}
             onClick={() => setPredictor(mon)}
