@@ -5,7 +5,8 @@ from preprocess import *
 from format_pred import format_prediction
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 
 models = {
