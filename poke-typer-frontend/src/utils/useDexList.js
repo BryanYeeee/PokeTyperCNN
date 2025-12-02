@@ -19,6 +19,7 @@ export default function useDexList () {
     //   console.log(entries)
       const formatted = entries.map(({ key, value }) => ({
         name: key,
+        img: URL.createObjectURL(value.imageBlob),
         predictions: {...emptyPred, ...value.predictions} // contains A/B/C/D/E and latest
       }))
     //   console.log('asdss')

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import { predictType } from '@/utils/predict.js'
 import { getPrediction, savePrediction } from '@/utils/indexedDB.js'
 
@@ -13,7 +13,7 @@ const emptyPred = {
 
 const models = ['A', 'B', 'C', 'D', 'E']
 
-export default function Predictor ({ refreshDex }) {
+const Predictor = forwardRef(({ refreshDex }, ref) => {
   const [selectedModel, setSelectedModel] = useState('A')
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
@@ -21,16 +21,28 @@ export default function Predictor ({ refreshDex }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  const handleFileChange = async e => setTarget(e.target.files[0])
 
-  const handleFileChange = async e => {
-    const f = e.target.files[0]
+  const setTarget = async (f) => {
     setFile(f)
     setError(null)
-    setPreview(URL.createObjectURL(f))
-    // console.log('file',f)
+
     const cache = await getPrediction(f.name)
-    setPredictions(cache ? { ...emptyPred, ...cache.predictions } : emptyPred)
+    if (cache) {
+      const previewUrl = cache.imageBlob
+        ? URL.createObjectURL(cache.imageBlob)
+        : URL.createObjectURL(f)
+      setPreview(previewUrl)
+      setPredictions({ ...emptyPred, ...cache.predictions })
+    } else {
+      setPreview(URL.createObjectURL(f))
+      setPredictions(emptyPred)
+    }
   }
+
+  useImperativeHandle(ref, () => ({
+    setTarget: setTarget
+  }))
 
   const handleSubmit = async () => {
     if (!file) {
@@ -44,7 +56,7 @@ export default function Predictor ({ refreshDex }) {
       const data = await predictType(file, selectedModel)
       console.log(data)
 
-      await savePrediction(file.name, selectedModel, data)
+      await savePrediction(file.name, selectedModel, data, file)
       setPredictions({ ...predictions, [selectedModel]: data })
       refreshDex()
     } catch (err) {
@@ -63,6 +75,7 @@ export default function Predictor ({ refreshDex }) {
         setPredictions({ ...predictions, latest: m })
         refreshDex()
       } catch (err) {
+        console.log('asddsddadsdsa')
         setError(err.message)
       } finally {
         // setLoading(false)
@@ -187,4 +200,6 @@ export default function Predictor ({ refreshDex }) {
       {/* )} */}
     </div>
   )
-}
+})
+
+export default Predictor

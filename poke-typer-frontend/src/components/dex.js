@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const models = ['Latest', 'A', 'B', 'C', 'D', 'E']
 
-const Dex = ({ dexList }) => {
+const Dex = ({ dexList, setPredictor }) => {
   const [selectedModel, setSelectedModel] = useState('A')
   return (
     <div className='w-full min-h-full'>
@@ -37,9 +37,17 @@ const Dex = ({ dexList }) => {
             className='w-full h-12 px-4 pt-1 flex justify-between bg-red-300 duration-200 hover:scale-110'
             data-augmented-ui='tl-clip br-2-clip-x both'
             style={{ '--aug-br-extend2': '50%' }}
+            onClick={() => setPredictor(mon)}
             key={mon.name}
           >
-            <div>{mon.name}</div>
+            <div className='flex gap-4'>
+              <img
+                src={mon.img}
+                alt=''
+                className='h-[2.5rem] aspect-square object-contain'
+              />
+              {mon.name}
+            </div>
             <div className='flex gap-4'>
               {/* {JSON.stringify(mon.predictions[selectedModel])} */}
               {Object.entries(

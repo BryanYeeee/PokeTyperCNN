@@ -3,11 +3,23 @@ import BoltDecal from '@/components/BoltDecal'
 import Dex from '@/components/dex'
 import DexCircles from '@/components/dexCircles'
 import Predictor from '@/components/predictor'
-import { useState } from 'react'
-import useDexList from "@/utils/useDexList";
+import { useRef } from 'react'
+import useDexList from '@/utils/useDexList'
 
 const CustomDex = () => {
-  const {dexList, refreshDex} = useDexList()
+  const { dexList, refreshDex } = useDexList()
+  const predictorRef = useRef()
+
+  const setPredictor = async mon => {
+    try {
+      const response = await fetch(mon.img)
+      let file = await response.blob()
+      file = new File([file], mon.name, { type: file.type })
+      predictorRef.current?.setTarget(file)
+    } catch (err) {
+      console.error('Failed to set predictor image:', err)
+    }
+  }
 
   return (
     <div
@@ -42,7 +54,7 @@ const CustomDex = () => {
                 '--aug-tl-inset1': '50.5%'
               }}
             >
-              <Predictor refreshDex={refreshDex}/>
+              <Predictor ref={predictorRef} refreshDex={refreshDex} />
               <BoltDecal pos={'bottom-8 left-8'} />
               <BoltDecal pos={'bottom-8 right-8'} />
             </div>
@@ -53,7 +65,7 @@ const CustomDex = () => {
         className='relative h-full w-1/2 min-w-100 foreground flex items-center p-16 overflow-hidden'
         data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
       >
-        <Dex dexList={dexList} />
+        <Dex dexList={dexList} setPredictor={setPredictor} />
         <BoltDecal pos='top-8 left-8' />
         <BoltDecal pos='top-8 right-8' />
         <BoltDecal pos='bottom-8 left-8' />

@@ -48,7 +48,7 @@ export async function getAllPredictions () {
   })
 }
 
-export async function savePrediction (fileName, model, data) {
+export async function savePrediction (fileName, model, data, imgBlob) {
   const db = await openDB()
 
   return new Promise((resolve, reject) => {
@@ -62,6 +62,7 @@ export async function savePrediction (fileName, model, data) {
 
       existing.predictions['latest'] = model
       if (data) existing.predictions[model] = data
+      if (imgBlob) existing.imageBlob = imgBlob
 
       const putReq = store.put(existing, fileName)
 
