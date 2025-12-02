@@ -45,7 +45,7 @@ A web application that predicts Pokémon types from images using multiple CNN mo
 - **Frontend**:
   - [Next.js](https://nextjs.org/) – React framework
   - [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework
-  - [AugmentedUI](https://augs.dev/) – Enhanced UI styling
+  - [AugmentedUI]([https://augs.dev/](https://augmented-ui.com/)) – Enhanced UI styling
 - **Backend**:
   - [Flask](https://flask.palletsprojects.com/) – Python web framework
 - **Machine Learning**:
