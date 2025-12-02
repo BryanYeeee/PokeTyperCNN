@@ -1,9 +1,20 @@
+import { deleteItem } from '@/utils/indexedDB'
 import { useState } from 'react'
 
 const models = ['Latest', 'A', 'B', 'C', 'D', 'E']
 
-const Dex = ({ dexList, setPredictor }) => {
+const Dex = ({ dexList, setPredictor, refreshDex }) => {
   const [selectedModel, setSelectedModel] = useState('A')
+
+  const handleDelete = async (monName) => {
+    try {
+      await deleteItem(monName)
+      refreshDex()
+    } catch (err) {
+      console.error('Failed to delete:', err)
+    }
+  }
+
   return (
     <div className='w-full h-full flex flex-col'>
       <div
@@ -65,6 +76,13 @@ const Dex = ({ dexList, setPredictor }) => {
                   </div>
                   // <div></div>
                 ))}
+
+              <button
+                onClick={() => handleDelete(mon.name)}
+                className='h-1/2 aspect-square mt-0.5 text-sm bg-red-500 text-white rounded hover:bg-red-700 transition-colors'
+              >
+                X
+              </button>
             </div>
           </div>
         ))}

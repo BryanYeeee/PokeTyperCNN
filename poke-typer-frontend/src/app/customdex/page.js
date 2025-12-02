@@ -65,7 +65,7 @@ const CustomDex = () => {
         className='relative h-full w-1/2 min-w-100 foreground flex items-center p-16 overflow-hidden'
         data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
       >
-        <Dex dexList={dexList} setPredictor={setPredictor} />
+        <Dex dexList={dexList} setPredictor={setPredictor} refreshDex={refreshDex} />
         <BoltDecal pos='top-8 left-8' />
         <BoltDecal pos='top-8 right-8' />
         <BoltDecal pos='bottom-8 left-8' />
