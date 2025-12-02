@@ -1,22 +1,33 @@
 import { useState } from 'react'
 import { predictType } from '@/utils/predict.js'
+import { getPrediction, savePrediction } from '@/utils/indexedDB.js'
 
+const emptyPred = {
+  latest: 'A',
+  A: { model: 'A', prediction: {} },
+  B: { model: 'A', prediction: {} },
+  C: { model: 'A', prediction: {} },
+  D: { model: 'A', prediction: {} },
+  E: { model: 'A', prediction: {} }
+}
 export default function Predictor () {
   const [selectedModel, setSelectedModel] = useState('A')
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
-  const [prediction, setPrediction] = useState({prediction:{}})
+  const [predictions, setPredictions] = useState(emptyPred)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   const models = ['A', 'B', 'C', 'D', 'E']
 
-  const handleFileChange = e => {
+  const handleFileChange = async e => {
     const f = e.target.files[0]
     setFile(f)
     setError(null)
     setPreview(URL.createObjectURL(f))
-    setPrediction({prediction:{}})
+    // console.log('file',f)
+    const cache = await getPrediction(f.name)
+    setPredictions(cache ? { ...emptyPred, ...cache.predictions } : emptyPred)
   }
 
   const handleSubmit = async () => {
@@ -26,16 +37,32 @@ export default function Predictor () {
     }
     setError(null)
     setLoading(true)
-    setPrediction({prediction:{}})
 
     try {
       const data = await predictType(file, selectedModel)
       console.log(data)
-      setPrediction(data)
+
+      await savePrediction(file.name, selectedModel, data)
+      setPredictions({ ...predictions, [selectedModel]: data })
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const changeModel = async m => {
+    await setSelectedModel(m)
+    if (Object.keys(predictions[m].prediction).length !== 0) {
+      setLoading(true)
+      try {
+        await savePrediction(file.name, m)
+        setPredictions({ ...predictions, latest: m })
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -67,7 +94,7 @@ export default function Predictor () {
               {models.map(m => (
                 <button
                   key={m}
-                  onClick={() => setSelectedModel(m)}
+                  onClick={() => changeModel(m)}
                   data-augmented-ui='tl-clip tr-clip br-clip bl-clip both'
                   className={`px-4 py-2 font-semibold transition-transform duration-200 hover:scale-110 ${
                     selectedModel === m
@@ -133,11 +160,11 @@ export default function Predictor () {
         data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
       >
         <h2 className='text-lg font-semibold mb-2 px-4'>
-          <span className='underline'>Predictions:</span> Model {prediction.model}
+          <span className='underline'>Predictions:</span> Model {selectedModel}
         </h2>
         <div className='h-full w-full overflow-y-auto px-4'>
           <ul className='space-y-1 text-sm'>
-            {Object.entries(prediction.prediction)
+            {Object.entries(predictions[selectedModel].prediction)
               .sort((a, b) => b[1] - a[1])
               .map(([type, prob], i) => (
                 <li
