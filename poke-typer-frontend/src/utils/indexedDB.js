@@ -22,6 +22,32 @@ export function openDB () {
   })
 }
 
+export async function getAllPredictions () {
+  const db = await openDB()
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const store = tx.objectStore(STORE_NAME)
+
+    const entries = []
+    const cursorReq = store.openCursor()
+
+    cursorReq.onsuccess = e => {
+      const cursor = e.target.result
+      if (cursor) {
+        entries.push({
+          key: cursor.key,
+          value: cursor.value
+        })
+        cursor.continue()
+      } else {
+        resolve(entries)
+      }
+    }
+    cursorReq.onerror = () => reject(getReq.error)
+  })
+}
+
 export async function savePrediction (fileName, model, data) {
   const db = await openDB()
 

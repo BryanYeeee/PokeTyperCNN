@@ -4,9 +4,10 @@ import Dex from '@/components/dex'
 import DexCircles from '@/components/dexCircles'
 import Predictor from '@/components/predictor'
 import { useState } from 'react'
+import useDexList from "@/utils/useDexList";
 
 const CustomDex = () => {
-  const [dexList, setDexList] = useState(['a', 'b', 'c'])
+  const {dexList, refreshDex} = useDexList()
 
   return (
     <div
@@ -41,7 +42,7 @@ const CustomDex = () => {
                 '--aug-tl-inset1': '50.5%'
               }}
             >
-              <Predictor/>
+              <Predictor refreshDex={refreshDex}/>
               <BoltDecal pos={'bottom-8 left-8'} />
               <BoltDecal pos={'bottom-8 right-8'} />
             </div>

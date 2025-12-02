@@ -10,7 +10,10 @@ const emptyPred = {
   D: { model: 'A', prediction: {} },
   E: { model: 'A', prediction: {} }
 }
-export default function Predictor () {
+
+const models = ['A', 'B', 'C', 'D', 'E']
+
+export default function Predictor ({ refreshDex }) {
   const [selectedModel, setSelectedModel] = useState('A')
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
@@ -18,7 +21,6 @@ export default function Predictor () {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const models = ['A', 'B', 'C', 'D', 'E']
 
   const handleFileChange = async e => {
     const f = e.target.files[0]
@@ -44,6 +46,7 @@ export default function Predictor () {
 
       await savePrediction(file.name, selectedModel, data)
       setPredictions({ ...predictions, [selectedModel]: data })
+      refreshDex()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -54,14 +57,15 @@ export default function Predictor () {
   const changeModel = async m => {
     await setSelectedModel(m)
     if (Object.keys(predictions[m].prediction).length !== 0) {
-      setLoading(true)
+      // setLoading(true)
       try {
         await savePrediction(file.name, m)
         setPredictions({ ...predictions, latest: m })
+        refreshDex()
       } catch (err) {
         setError(err.message)
       } finally {
-        setLoading(false)
+        // setLoading(false)
       }
     }
   }
