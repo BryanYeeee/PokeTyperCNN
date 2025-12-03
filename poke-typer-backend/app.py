@@ -23,10 +23,12 @@ files = {
 
 def download_file(url, path):
     print(f"Downloading {path}...")
-    r = requests.get(url, stream=True)
-    with open(path, "wb") as f:
-        for chunk in r.iter_content(chunk_size=8192):
-            f.write(chunk)
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=1024*1024):  # 1 MB chunks
+                if chunk:
+                    f.write(chunk)
     print(f"Saved {path}")
 
 for url, path in files.items():
