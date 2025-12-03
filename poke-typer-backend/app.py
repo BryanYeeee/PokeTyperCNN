@@ -4,14 +4,13 @@ from tensorflow.keras.models import load_model
 from preprocess import *
 from format_pred import format_prediction
 import os
-import requests
+# import requests
 
 app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app, resources={r"/*": {"origins": [
-            "https://poketypercnn.pages.dev",
-            "http://localhost:3000"
-        ]}})
+CORS(app,
+     resources={r"/*": {"origins": ["http://localhost:3000"]}},
+     methods=["GET","POST"])
 
 
 BASE = os.path.dirname(os.path.abspath(__file__))
