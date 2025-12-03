@@ -29,9 +29,11 @@ def download_file(url, path):
             f.write(chunk)
     print(f"Saved {path}")
 
-if os.getenv("RENDER") == "1":
-    for url, path in files.items():
-        download_file(url, path)
+for url, path in files.items():
+    download_file(url, path)
+# if os.getenv("RENDER") == "1":
+#     for url, path in files.items():
+#         download_file(url, path)
 
 models = {
     "A": [load_model(os.path.join(BASE, "models/model_A.h5")), preprocess_effnet],
