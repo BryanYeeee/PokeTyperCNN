@@ -4,6 +4,7 @@ from tensorflow.keras.models import load_model
 from preprocess import *
 from format_pred import format_prediction
 import os
+import requests
 
 app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
@@ -14,6 +15,27 @@ CORS(app, resources={r"/*": {"origins": [
 
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+
+files = {
+    "https://dl.dropboxusercontent.com/scl/fi/8a1nulx8wif5fkwyzxo8kqgxpb/model_D.keras?rlkey=9ho830wy7ckemco3lz9kqgxpb&st=b9uvvh8i&dl=0": "models/model_D.keras",
+    "https://dl.dropboxusercontent.com/scl/fi/qi5zkvi16fns6yykc9shx/model_E.keras?rlkey=iwpdd1glsgw4djpt6yfsk64be&st=saa3bjdu&dl=0": "models/model_E.keras"
+}
+
+def download_file(url, path):
+    if not os.path.exists(path):
+        print(f"Downloading {path}...")
+        r = requests.get(url, stream=True)
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+        print(f"Saved {path}")
+    else:
+        print(f"{path} already exists, skipping download.")
+
+if os.getenv("RENDER") == "1":
+    for url, path in files.items():
+        download_file(url, path)
+
 models = {
     "A": [load_model(os.path.join(BASE, "models/model_A.h5")), preprocess_effnet],
     "B": [load_model(os.path.join(BASE, "models/model_B.h5")), preprocess_effnet],
