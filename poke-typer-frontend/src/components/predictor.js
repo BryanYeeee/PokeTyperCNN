@@ -77,7 +77,6 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
         setPredictions({ ...predictions, latest: m })
         refreshDex()
       } catch (err) {
-        console.log('asddsddadsdsa')
         setError(err.message)
       } finally {
         // setLoading(false)
