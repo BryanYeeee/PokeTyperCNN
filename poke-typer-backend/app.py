@@ -41,12 +41,12 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 #         download_file(url, path)
 
 modelA = load_model(os.path.join(BASE, "models/model_A.h5"))
-modelB = load_model(os.path.join(BASE, "models/model_B.h5"))
-modelC = load_model(os.path.join(BASE, "models/model_C.h5"))
+# modelB = load_model(os.path.join(BASE, "models/model_B.h5"))
+# modelC = load_model(os.path.join(BASE, "models/model_C.h5"))
 models = {
     "A": [modelA, preprocess_effnet],
-    "B": [modelB, preprocess_effnet],
-    "C": [modelC,preprocess_effnet],
+    # "B": [modelB, preprocess_effnet],
+    # "C": [modelC,preprocess_effnet],
     # "D": [load_model(os.path.join(BASE, "models/model_D.keras")),preprocess_resnet],
     # "E": [load_model(os.path.join(BASE, "models/model_E.keras")),preprocess_resnet]
 }
