@@ -22,15 +22,12 @@ files = {
 }
 
 def download_file(url, path):
-    if not os.path.exists(path):
-        print(f"Downloading {path}...")
-        r = requests.get(url, stream=True)
-        with open(path, "wb") as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
-        print(f"Saved {path}")
-    else:
-        print(f"{path} already exists, skipping download.")
+    print(f"Downloading {path}...")
+    r = requests.get(url, stream=True)
+    with open(path, "wb") as f:
+        for chunk in r.iter_content(chunk_size=8192):
+            f.write(chunk)
+    print(f"Saved {path}")
 
 if os.getenv("RENDER") == "1":
     for url, path in files.items():
