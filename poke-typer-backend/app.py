@@ -8,9 +8,13 @@ import os
 
 app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app,
-     resources={r"/*": {"origins": ["http://localhost:3000"]}},
-     methods=["GET","POST"])
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 
 BASE = os.path.dirname(os.path.abspath(__file__))
