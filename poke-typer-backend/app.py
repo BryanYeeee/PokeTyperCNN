@@ -3,10 +3,14 @@ from flask_cors import CORS
 from tensorflow.keras.models import load_model
 from preprocess import *
 from format_pred import format_prediction
+import os
 
 app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
-CORS(app, resources={r"/*": {"origins": "https://poketypercnn.pages.dev/"}})
+CORS(app, resources={r"/*": {"origins": [
+            "https://poketypercnn.pages.dev",
+            "http://localhost:3000"
+        ]}})
 
 
 
@@ -41,4 +45,5 @@ def predict(model_name):
     return jsonify({"model": model_name, "prediction": format_prediction(preds)})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000, threaded=False)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
