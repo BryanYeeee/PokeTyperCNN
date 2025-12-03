@@ -13,13 +13,13 @@ CORS(app, resources={r"/*": {"origins": [
         ]}})
 
 
-
+BASE = os.path.dirname(os.path.abspath(__file__))
 models = {
-    "A": [load_model("models/model_A.h5"), preprocess_effnet],
-    "B": [load_model("models/model_B.h5"), preprocess_effnet],
-    "C": [load_model("models/model_C.h5"),preprocess_effnet],
-    "D": [load_model("models/model_D.keras"),preprocess_resnet],
-    "E": [load_model("models/model_E.keras"),preprocess_resnet]
+    "A": [load_model(os.path.join(BASE, "models/model_A.h5")), preprocess_effnet],
+    "B": [load_model(os.path.join(BASE, "models/model_B.h5")), preprocess_effnet],
+    "C": [load_model(os.path.join(BASE, "models/model_C.h5")),preprocess_effnet],
+    "D": [load_model(os.path.join(BASE, "models/model_D.keras")),preprocess_resnet],
+    "E": [load_model(os.path.join(BASE, "models/model_E.keras")),preprocess_resnet]
 }
 
 for key in models:
