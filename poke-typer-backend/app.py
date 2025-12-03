@@ -5,7 +5,8 @@ from preprocess import *
 from format_pred import format_prediction
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+# CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "https://poketypercnn.pages.dev/"}})
 
 
 
@@ -17,6 +18,10 @@ models = {
     "E": [load_model("models/model_E.keras"),preprocess_resnet]
 }
 
+for key in models:
+    dummy = tf.zeros((1, 224, 224, 3))
+    _ = models[key][0](dummy)
+    
 @app.route("/predict/<model_name>", methods=["POST"])
 def predict(model_name):
     if model_name not in models:
@@ -36,4 +41,4 @@ def predict(model_name):
     return jsonify({"model": model_name, "prediction": format_prediction(preds)})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=10000, threaded=False)
