@@ -1,24 +1,18 @@
-import h5py
-from tensorflow import keras
+import tensorflow as tf
 
-# # 1. Load your Keras model
-# model = keras.models.load_model("models/resnet50/resnet50,0.72auc.keras")  # or "model.h5"
+models = ["A"]  # whichever you have
 
-# # 2. Save compressed manually using h5py
-# with h5py.File("comp_resnet50,0.72auc.keras", "w") as f:
-#     for layer in model.layers:
-#         weights = layer.get_weights()
-#         if weights:  # skip layers without weights
-#             grp = f.create_group(layer.name)
-#             for i, w in enumerate(weights):
-#                 # compress using gzip (can also try 'lzf')
-#                 grp.create_dataset(f"weight_{i}", data=w, compression="gzip", compression_opts=9)
+for m in models:
+    keras_path = f"poke-typer-backend/models/model_{m}.h5"
+    tflite_path = f"poke-typer-backend/models/model_{m}.tflite"
 
-import h5py
+    model = tf.keras.models.load_model(keras_path)
 
-with h5py.File("models/EfficientNetB0/poke_efficnet_0o716auc.h5", "r") as f:
-    if "keras_version" in f.attrs:
-        print("Keras version:", f.attrs["keras_version"])
-    if "backend" in f.attrs:
-        print("Backend:", f.attrs["backend"])
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]  # reduces RAM
+    tflite_model = converter.convert()
 
+    with open(tflite_path, "wb") as f:
+        f.write(tflite_model)
+
+    print(f"Converted {keras_path} → {tflite_path}")

@@ -1,13 +1,15 @@
 import requests
-from bs4 import BeautifulSoup, NavigableString
+# from bs4 import BeautifulSoup, NavigableString
 import pandas as pd
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from urllib.parse import urljoin
 import numpy as np
-import matplotlib.pyplot as plt
-# from tensorflow.keras.applications.efficientnet import preprocess_input
-from keras.applications.resnet50 import preprocess_input
+from PIL import Image
+
+# import matplotlib.pyplot as plt
+from tensorflow.keras.applications.efficientnet import preprocess_input
+# from keras.applications.resnet50 import preprocess_input
 import os
 
 BASE_URL = "https://phoenixdex.alteredorigin.net"
@@ -23,62 +25,92 @@ POKEMON_IMG = urljoin(BASE_URL, "/images/pokemon/")
 TYPES = {'bug': 0, 'dark': 1, 'dragon': 2, 'electric': 3, 'fairy': 4, 'fighting': 5, 'fire': 6, 'flying': 7, 'ghost': 8, 'grass': 9, 'ground': 10, 'ice': 11, 'normal': 12, 'poison': 13, 'psychic': 14, 'rock': 15, 'steel': 16, 'water': 17}
 TYPE_INDEX = ['bug','dark','dragon','electric','fairy','fighting','fire','flying','ghost','grass','ground','ice','normal','poison','psychic','rock','steel','water']
 
-def load_and_prepare_image(img_path, target_size=(64,64)):
-    # response = requests.get(img_path, stream=True)
-    # response.raise_for_status()  # make sure download was successful
-    # img = image.load_img(BytesIO(response.content), target_size=target_size)
-    img = image.load_img(img_path, target_size=target_size)
+# def load_and_prepare_image(img_path, target_size=(64,64)):
+#     # response = requests.get(img_path, stream=True)
+#     # response.raise_for_status()  # make sure download was successful
+#     # img = image.load_img(BytesIO(response.content), target_size=target_size)
+#     img = image.load_img(img_path, target_size=target_size)
 
-    img_array = image.img_to_array(img)
-    img_array = img_array.astype('float32') / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+#     img_array = image.img_to_array(img)
+#     img_array = img_array.astype('float32') / 255.0
+#     img_array = np.expand_dims(img_array, axis=0)
 
-    # plt.imshow(img_array[0])
-    # plt.show()
-    return img_array
+#     # plt.imshow(img_array[0])
+#     # plt.show()
+#     return img_array
 
 
-def scrape_index_page(index_url=POKEMON_INDEX):
-    resp = requests.get(index_url, timeout=15)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
+# def scrape_index_page(index_url=POKEMON_INDEX):
+#     resp = requests.get(index_url, timeout=15)
+#     resp.raise_for_status()
+#     soup = BeautifulSoup(resp.text, "html.parser")
 
-    rows = []
-    # seen = set()
-    for poke in soup.find_all(class_="mini-poketable"):
-        cur = {}
-        cur['name'] = poke.strong.string
-        cur['img'] = poke.find("img")["src"].split("/")[-1]
-        type = poke.find_all(class_='type-icon')
+#     rows = []
+#     # seen = set()
+#     for poke in soup.find_all(class_="mini-poketable"):
+#         cur = {}
+#         cur['name'] = poke.strong.string
+#         cur['img'] = poke.find("img")["src"].split("/")[-1]
+#         type = poke.find_all(class_='type-icon')
 
-        vector = np.zeros(len(TYPES), dtype=np.float32)
-        vector[TYPES[type[0].string.lower()]] = 1
-        cur['type1']=type[0].string.lower()
-        if len(type) > 1:
-            cur['type2']=type[1].string.lower()
-            vector[TYPES[type[1].string.lower()]] = 1
+#         vector = np.zeros(len(TYPES), dtype=np.float32)
+#         vector[TYPES[type[0].string.lower()]] = 1
+#         cur['type1']=type[0].string.lower()
+#         if len(type) > 1:
+#             cur['type2']=type[1].string.lower()
+#             vector[TYPES[type[1].string.lower()]] = 1
 
-        for i in range(len(TYPES)):
-            cur[f'label_{i}'] = vector[i]
+#         for i in range(len(TYPES)):
+#             cur[f'label_{i}'] = vector[i]
 
-        rows.append(cur)
+#         rows.append(cur)
         
-        # local_path = os.path.join('data\\fakemon-img', cur['img'])
-        # if not os.path.exists(local_path):
-        IMAGE_DIR = "C:/Users/halod/Documents/Projects/poke_classy/images/"
-        response = requests.get(POKEMON_IMG+cur['img'], stream=True, timeout=15)
-        response.raise_for_status()
-        with open(IMAGE_DIR+cur['img'], "wb") as f:
-            f.write(response.content)
+#         # local_path = os.path.join('data\\fakemon-img', cur['img'])
+#         # if not os.path.exists(local_path):
+#         IMAGE_DIR = "C:/Users/halod/Documents/Projects/poke_classy/images/"
+#         response = requests.get(POKEMON_IMG+cur['img'], stream=True, timeout=15)
+#         response.raise_for_status()
+#         with open(IMAGE_DIR+cur['img'], "wb") as f:
+#             f.write(response.content)
         
-        # img_array = load_and_prepare_image(cur['img'])
-        # return
-        # if len(rows) > 15:
-        #     break
+#         # img_array = load_and_prepare_image(cur['img'])
+#         # return
+#         # if len(rows) > 15:
+#         #     break
         
-    df = pd.DataFrame(rows, columns=["name","type1","type2","img"]+[f'label_{i}' for i in range(len(TYPES))])
-    df.to_csv("phoenixdex_pokemon.csv", index=False)
-    return
+#     df = pd.DataFrame(rows, columns=["name","type1","type2","img"]+[f'label_{i}' for i in range(len(TYPES))])
+#     df.to_csv("phoenixdex_pokemon.csv", index=False)
+#     return
+
+import numpy as np
+import tensorflow as tf
+
+def evaluate_tflite(interpreter, input_details, output_details, generator):
+    total_correct = 0
+    total_samples = 0
+
+    for batch_images, batch_labels in generator:
+        # Stop when dataset completes
+        if isinstance(generator, tf.keras.preprocessing.image.DirectoryIterator) \
+            and generator.batch_index == 0:
+            break
+
+        for i in range(len(batch_images)):
+            img = batch_images[i:i+1].astype(np.float32)
+
+            interpreter.set_tensor(input_details[0]['index'], img)
+            interpreter.invoke()
+
+            preds = interpreter.get_tensor(output_details[0]['index'])
+            pred_label = np.argmax(preds)
+            true_label = np.argmax(batch_labels[i])
+
+            if pred_label == true_label:
+                total_correct += 1
+            total_samples += 1
+
+    accuracy = total_correct / total_samples
+    return accuracy
 
 if __name__ == "__main__":
     # scrape_index_page()
@@ -87,11 +119,11 @@ if __name__ == "__main__":
     # model = load_model('models\EfficientNetB0\poke_efficnet_0o716auc.h5')
     # model2 = load_model('models\EfficientNetB0\poke_efficnet_224_0o70auc.h5')
     # model3 = load_model('models\EfficientNetB0\poke_efficnet_224_0o69auc.h5')
-    model = load_model('poke-typer-backend\models\model_D.keras')
-    model2 = load_model('poke-typer-backend\models\model_E.keras')
-    # model3 = load_model('models\comp_resnet50,0.72auc.keras')
-    # model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
-    model3 = load_model('models/resnet50/resnet50,0.724auc.keras')
+    # model = load_model('poke-typer-backend\models\model_D.keras')
+    # model2 = load_model('poke-typer-backend\models\model_E.keras')
+    # # model3 = load_model('models\comp_resnet50,0.72auc.keras')
+    # # model2 = load_model('models/resnet50/resnet50,0.72auc.keras')
+    # model3 = load_model('models/resnet50/resnet50,0.724auc.keras')
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator 
     label_cols = [f'label_{i}' for i in range(18)]
@@ -206,7 +238,16 @@ if __name__ == "__main__":
     # venn3(subsets=venn_counts, set_labels=("Model A", "Model B", "Model C"))
     # plt.show()
 
-    print(model.evaluate(full_gen,verbose=1))
-    print(model2.evaluate(full_gen,verbose=1))
-    print(model3.evaluate(full_gen,verbose=1))
+    # print(model.evaluate(full_gen,verbose=1))
+    # print(model2.evaluate(full_gen,verbose=1))
+    # print(model3.evaluate(full_gen,verbose=1))
+
+    interpreter = tf.lite.Interpreter(model_path="poke-typer-backend/models/model_A.tflite")
+    interpreter.allocate_tensors()
+
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+    acc = evaluate_tflite(interpreter, input_details, output_details, full_gen)
+    print("TFLite accuracy:", acc)
+
     
