@@ -1,15 +1,19 @@
 import tensorflow as tf
 
-models = ["A"]  # whichever you have
+models = ["E"]  # whichever you have
 
 for m in models:
-    keras_path = f"poke-typer-backend/models/model_{m}.h5"
+    keras_path = f"models/resnet50/resnet50,0.724auc.keras"
     tflite_path = f"poke-typer-backend/models/model_{m}.tflite"
 
+    print(f"Loading {keras_path}...")
     model = tf.keras.models.load_model(keras_path)
 
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
-    converter.optimizations = [tf.lite.Optimize.DEFAULT]  # reduces RAM
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    converter.target_spec.supported_types = [tf.float16] 
+
+    print("Converting...")
     tflite_model = converter.convert()
 
     with open(tflite_path, "wb") as f:

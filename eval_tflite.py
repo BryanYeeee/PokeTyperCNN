@@ -8,14 +8,14 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications.efficientnet import preprocess_input
+from tensorflow.keras.applications.resnet50 import preprocess_input
 from sklearn.metrics import roc_auc_score
 from PIL import Image
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE, "data", "phoenixdex_pokemon.csv")
 IMAGE_DIR = os.path.join(BASE, "data", "fakemon-images-blackbg")
-TFLITE_MODEL_PATH = os.path.join(BASE, "poke-typer-backend", "models", "model_A.tflite")
+TFLITE_MODEL_PATH = os.path.join(BASE, "poke-typer-backend", "models", "model_E.tflite")
 
 NUM_CLASSES = 18
 label_cols = [f"label_{i}" for i in range(NUM_CLASSES)]

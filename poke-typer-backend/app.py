@@ -12,7 +12,7 @@ app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:3000"],
+        "origins": ["https://poketypercnn.pages.dev/","http://localhost:3000"],
         "methods": ["GET", "POST"],
         "allow_headers": ["Content-Type"]
     }
@@ -21,55 +21,37 @@ CORS(app, resources={
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
-# files = {
-#     "https://dl.dropboxusercontent.com/scl/fi/8a1nulx8wif5fkwyzxo8kqgxpb/model_D.keras?rlkey=9ho830wy7ckemco3lz9kqgxpb&st=b9uvvh8i&dl=0": "models/model_D.keras",
-#     "https://dl.dropboxusercontent.com/scl/fi/qi5zkvi16fns6yykc9shx/model_E.keras?rlkey=iwpdd1glsgw4djpt6yfsk64be&st=saa3bjdu&dl=0": "models/model_E.keras"
-# }
+MODEL_FILES = {
+    "A": ("model_A.tflite", preprocess_effnet),
+    "B": ("model_B.tflite", preprocess_effnet),
+    "C": ("model_C.tflite", preprocess_effnet),
+    "D": ("model_D.tflite", preprocess_resnet),
+    "E": ("model_E.tflite", preprocess_resnet),
+}
 
-# def download_file(url, path):
-#     print(f"Downloading {path}...")
-#     with requests.get(url, stream=True) as r:
-#         r.raise_for_status()
-#         with open(path, "wb") as f:
-#             for chunk in r.iter_content(chunk_size=1024*1024):  # 1 MB chunks
-#                 if chunk:
-#                     f.write(chunk)
-#     print(f"Saved {path}")
-
-# for url, path in files.items():
-#     download_file(url, path)
-# if os.getenv("RENDER") == "1":
-#     for url, path in files.items():
-#         download_file(url, path)
+models = {
+    name: (*load_tflite(os.path.join(BASE, "models", fname)), prep)
+    for name, (fname, prep) in MODEL_FILES.items()
+}
 
 # modelA = load_model(os.path.join(BASE, "models/model_A.h5"))
 # modelB = load_model(os.path.join(BASE, "models/model_B.h5"))
 # modelC = load_model(os.path.join(BASE, "models/model_C.h5"))
-
-TFLITE_PATH = os.path.join(BASE, "models", "model_A.tflite")
-
-interpreterA, inputA, outputA = load_tflite(TFLITE_PATH)
-
-models = {
-    "A": [interpreterA, inputA, outputA],
-}
-
-# models = {
-#     "A": [os.path.join(BASE, "models/model_A.tflite"), preprocess_effnet],
-#     # "B": [modelB, preprocess_effnet],
-#     # "C": [modelC,preprocess_effnet],
-#     # "D": [load_model(os.path.join(BASE, "models/model_D.keras")),preprocess_resnet],
-#     # "E": [load_model(os.path.join(BASE, "models/model_E.keras")),preprocess_resnet]
+# models (not tflite) = {
+#     "A": [modelA, preprocess_effnet],
+#     "B": [modelB, preprocess_effnet],
+#     "C": [modelC,preprocess_effnet],
+#     "D": [load_model(os.path.join(BASE, "models/model_D.keras")),preprocess_resnet],
+#     "E": [load_model(os.path.join(BASE, "models/model_E.keras")),preprocess_resnet]
 # }
-
 # for key in models:
 #     dummy = tf.zeros((1, 224, 224, 3))
 #     _ = models[key][0](dummy)
     
 @app.route("/predict/<model_name>", methods=["POST"])
 def predict(model_name):
-    if model_name in ["D", "E"]:
-        return jsonify({"error": f"Model D and E currently unavailable"}), 404
+    # if model_name in ["D", "E"]:
+    #     return jsonify({"error": f"Model D and E currently unavailable"}), 404
 
     if model_name not in models:
         return jsonify({"error": f"Model '{model_name}' not found"}), 404
@@ -81,10 +63,8 @@ def predict(model_name):
     file = request.files["file"]
     image_bytes = file.read()
 
-    interpreter, input_details, output_details = models[model_name]
-
-    preds = predict_tflite(interpreter, input_details, output_details, image_bytes)
-
+    interpreter, input_details, output_details, preprocess = models[model_name]
+    preds = predict_tflite(interpreter, input_details, output_details, image_bytes, preprocess)
 
     return jsonify({"model": model_name, "prediction": format_prediction(preds.reshape(1, -1))})
 
