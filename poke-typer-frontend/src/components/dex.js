@@ -59,7 +59,7 @@ const Dex = ({ dexList, setPredictor, refreshDex }) => {
                 alt=''
                 width={40}
                 height={40}
-                // className='h-[2.5rem] aspect-square object-contain'
+                className='size-auto'
               />
               <div className='max-w-1/2'>{mon.name}</div>
               
