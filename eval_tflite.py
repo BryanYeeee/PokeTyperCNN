@@ -15,7 +15,7 @@ from PIL import Image
 BASE = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE, "data", "phoenixdex_pokemon.csv")
 IMAGE_DIR = os.path.join(BASE, "data", "fakemon-images-blackbg")
-TFLITE_MODEL_PATH = os.path.join(BASE, "poke-typer-backend", "models", "model_E.tflite")
+TFLITE_MODEL_PATH = os.path.join(BASE, "poke-typer-backend", "models", "model_D2.tflite")
 
 NUM_CLASSES = 18
 label_cols = [f"label_{i}" for i in range(NUM_CLASSES)]

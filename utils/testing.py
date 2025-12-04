@@ -11,7 +11,7 @@ for m in models:
 
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter.target_spec.supported_types = [tf.float16] 
+    # converter.target_spec.supported_types = [tf.float16] 
 
     print("Converting...")
     tflite_model = converter.convert()

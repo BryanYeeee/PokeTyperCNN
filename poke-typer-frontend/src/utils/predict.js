@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_BASE = "https://poketypercnn.onrender.com";
-// const API_BASE = "http://localhost:10000";
+// const API_BASE = "https://poketypercnn.onrender.com";
+const API_BASE = "http://localhost:10000";
 
 /**
  * Upload an image and get predictions from the Flask backend.
