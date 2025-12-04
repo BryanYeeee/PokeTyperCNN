@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import load_model
+import os
+
 from preprocess import *
 from format_pred import format_prediction
-import os
+from tflite_model_cache import load_tflite_interpreter, MODEL_FILES
 from predict_tflite import load_tflite, predict_tflite
 
 # import requests
@@ -19,20 +21,6 @@ CORS(app, resources={
 })
 
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-
-MODEL_FILES = {
-    "A": ("model_A.tflite", preprocess_effnet),
-    "B": ("model_B.tflite", preprocess_effnet),
-    "C": ("model_C.tflite", preprocess_effnet),
-    "D": ("model_D.tflite", preprocess_resnet),
-    "E": ("model_E.tflite", preprocess_resnet),
-}
-
-models = {
-    name: (*load_tflite(os.path.join(BASE, "models", fname)), prep)
-    for name, (fname, prep) in MODEL_FILES.items()
-}
 
 # modelA = load_model(os.path.join(BASE, "models/model_A.h5"))
 # modelB = load_model(os.path.join(BASE, "models/model_B.h5"))
@@ -53,7 +41,7 @@ def predict(model_name):
     # if model_name in ["D", "E"]:
     #     return jsonify({"error": f"Model D and E currently unavailable"}), 404
 
-    if model_name not in models:
+    if model_name not in MODEL_FILES:
         return jsonify({"error": f"Model '{model_name}' not found"}), 404
 
     # Expect an image file in the request
@@ -63,7 +51,9 @@ def predict(model_name):
     file = request.files["file"]
     image_bytes = file.read()
 
-    interpreter, input_details, output_details, preprocess = models[model_name]
+    interpreter, input_details, output_details, preprocess = load_tflite_interpreter(
+        model_name
+    )
     preds = predict_tflite(interpreter, input_details, output_details, image_bytes, preprocess)
 
     return jsonify({"model": model_name, "prediction": format_prediction(preds.reshape(1, -1))})
