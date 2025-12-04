@@ -1,10 +1,10 @@
 import tensorflow as tf
 
-models = ["E"]  # whichever you have
+models = ["D"]  # whichever you have
 
 for m in models:
-    keras_path = f"models/resnet50/resnet50,0.724auc.keras"
-    tflite_path = f"poke-typer-backend/models/model_{m}.tflite"
+    keras_path = f"models/resnet50/resnet50_D.keras"
+    tflite_path = f"poke-typer-backend/models/model_{m}2.tflite"
 
     print(f"Loading {keras_path}...")
     model = tf.keras.models.load_model(keras_path)
