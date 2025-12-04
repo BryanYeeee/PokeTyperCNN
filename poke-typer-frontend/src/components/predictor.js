@@ -100,7 +100,7 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
             className='bg-grey'
             data-augmented-ui='bl-clip br-clip tr-clip tl-clip both'
           >
-            <div className='size-48 min-w-48 p-3'>
+            <div className='size-32 lg:size-48 p-3'>
               {preview && (
                 <Image
                   src={preview}
@@ -129,7 +129,7 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
                 </button>
               ))}
             </div>
-            <div className='flex justify-between gap-4 w-full'>
+            <div className='flex items-center justify-between gap-4 w-full'>
               <label
                 htmlFor='fileInput'
                 className='text-center px-4 py-1 w-1/2 font-bold duration-200 hover:scale-110'
@@ -141,7 +141,7 @@ const Predictor = forwardRef(({ refreshDex }, ref) => {
                   color: '#86efac'
                 }}
               >
-                {file ? 'Change Image' : 'Browse Image'}
+                {file ? 'Change Img' : 'Browse Img'}
               </label>
               <button
                 className='disabled:opacity-80 text-center px-4 py-1 w-1/2 text-xl font-bold text-black duration-200 hover:scale-110'
